@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+  <style>
+    h2 {
+        text-align: center;
+        }
+    p {
+
+      width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+
+
+    }
+    svg{
+        display: block;
+        margin: auto;
+        }
+
+  </style>
+    <script type="text/javascript">
+      function draw(data) {
+        d3.select('body')
+          .append('h2')
+          .text("Powerball analysis");
+
+        d3.select('body')
+          .append('p')
+          .text("Powerball is a jackpot game with a long hisotry. Starting October 2015, the games changes to its new rule: \
+           Every Wednesday and Saturday, five white balls are drawn out of a drum with 69 balls \
+           and one red ball out of a drum with 26 red balls. ")
+        d3.select('body')
+          .append('p')
+          .text("Theoretically, the drawing procedure should not bias any specific number. However, it's curious to know \
+          the number distribution on every draw over a period of time. My goad is to visualize the number distribution \
+          of the jackpot number since the new rule. For the sake of simplicity and visualization, I only plot the distribution \
+          of the red ball number and the average number of five white balls in each draw. Since the five white balls are draw from \
+          69 balls, the expected average number of white balls should be 35. The red ball should evenly distributed between 1 and 26. ")
+
+          "use strict";
+          var margin = 50,
+              width = 800,
+              height = 400;
+
+
+          var svg = d3.select("body")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height)
+              .append('g')
+              .attr('class','chart');
+
+
+
+          data.forEach(function(d) {
+                              d['n1'] = +d['n1'];
+                              d['n2'] = +d['n2'];
+                              d['n3'] = +d['n3'];
+                              d['n4'] = +d['n4'];
+                              d['n5'] = +d['n5'];
+                              //d['date'] "%m/%d/%Y" no need to parse date. dimple addTimeAxis will change input to output format
+                              d['red'] = +d['red'];
+                              d["average_white_ball"] = (d['n1'] + d['n2'] + d['n3'] + d['n4'] + d['n5']) / 5;
+                          });
+          console.log(data);
+
+          var myChart = new dimple.chart(svg, data);
+
+          // define x axis in time scale
+          var x = myChart.addTimeAxis("x", "date", "%m/%d/%Y", "%Y-%m")
+          x.addOrderRule("Date");
+          x.title = "Draw Date";
+
+          // define y axis
+          var y1 = myChart.addMeasureAxis("y", "average_white_ball");
+          var y2 = myChart.addMeasureAxis(y1, "red");
+          y1.title = "Number";
+
+          myChart.addSeries("Average White Ball Number", dimple.plot.bubble, [x, y1]);
+          myChart.addSeries("Red Ball Number", dimple.plot.bubble, [x, y2]);
+
+          // assign color to each series
+          myChart.assignColor("Average White Ball Number", "red", "red", 1);
+          myChart.assignColor("Red Ball Number", "blue", "blue", 1);
+
+          // add figure legend
+          myChart.addLegend( 0.6* width, margin/2, "right");
+          myChart.draw();
+
+          d3.select('body')
+            .append('p')
+            .text("In summary, the red ball seems to have a random distribution between 1 and 26. \
+            It is hard to say there's any specific pattern in the distribution. \
+            The average number of white balls seems to have a random distribution between 15 and 57. \
+            The average number is around 35. These distributions are expected from random drawing on \
+            fair balls. However, in order to futher discover pattern behind this, if there is any, \
+            statistical machine learning methods should be employed. ")
+        };
+      </script>
+  </head>
+<body>
+  <script type="text/javascript">
+    d3.csv("powerball_history_period.csv", draw);
+  </script>
+</body>
+</html>
