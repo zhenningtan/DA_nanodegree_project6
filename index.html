@@ -80,16 +80,27 @@
           var y2 = myChart.addMeasureAxis(y1, "red");
           y1.title = "Number";
 
+
           myChart.addSeries("Average White Ball Number", dimple.plot.bubble, [x, y1]);
           myChart.addSeries("Red Ball Number", dimple.plot.bubble, [x, y2]);
 
           // assign color to each series
-          myChart.assignColor("Average White Ball Number", "red", "red", 1);
-          myChart.assignColor("Red Ball Number", "blue", "blue", 1);
+          myChart.assignColor("Average White Ball Number", "blue", "blue", 1);
+          myChart.assignColor("Red Ball Number", "red", "red", 1);
 
           // add figure legend
-          myChart.addLegend( 0.6* width, margin/2, "right");
+          myChart.addLegend( 0.7* width, margin/2, 0.3*width, margin *2,"left");
           myChart.draw();
+
+          // format the axes labels
+          d3.selectAll(".dimple-title")
+            .style("font-family", "arial")
+            .style("font-size", 15);
+
+          // format legend labels
+          d3.selectAll(".dimple-legend-text")
+            .style("font-family", "arial")
+            .style("font-size", 12);
 
           d3.select('body')
             .append('p')
