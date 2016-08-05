@@ -9,13 +9,19 @@
         text-align: center;
         }
     p {
-
       width: 800px;
       margin-left: auto;
       margin-right: auto;
-
-
+      font-size: 18px;
     }
+
+    a {
+      width: 800px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     svg{
         display: block;
         margin: auto;
@@ -32,7 +38,13 @@
           .append('p')
           .text("Powerball is a jackpot game with a long hisotry. Starting October 2015, the games changes to its new rule: \
            Every Wednesday and Saturday, five white balls are drawn out of a drum with 69 balls \
-           and one red ball out of a drum with 26 red balls. ")
+           and one red ball out of a drum with 26 red balls. ");
+
+        d3.select('body')
+          .append('a')
+          .attr("href", "http://www.powerball.com/powerball/pb_howtoplay.asp")
+          .html("Click here to learn how to play Powerball game");
+
         d3.select('body')
           .append('p')
           .text("Theoretically, the drawing procedure should not bias any specific number. However, it's curious to know \
@@ -65,9 +77,12 @@
                               //d['date'] "%m/%d/%Y" no need to parse date. dimple addTimeAxis will change input to output format
                               d['red'] = +d['red'];
                               d["average_white_ball"] = (d['n1'] + d['n2'] + d['n3'] + d['n4'] + d['n5']) / 5;
-                          });
+                              d['count'] =1 ;
+                              d['ave_white_cat'] = Math.round(d['average_white_ball']); // create a categorical variable for average white ball number
+                              });
           console.log(data);
 
+          // make a scatter plot over time to show number distribution over time
           var myChart = new dimple.chart(svg, data);
 
           // define x axis in time scale
@@ -92,6 +107,56 @@
           myChart.addLegend( 0.7* width, margin/2, 0.3*width, margin *2,"left");
           myChart.draw();
 
+
+
+          // =================================================
+          // add a second svg to draw histogram of average white ball numbers
+          var svg_2 = d3.select("body")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height)
+              .append('g')
+              .attr('class','chart');
+
+          var myChart2 = new dimple.chart(svg_2, data);
+          var x2 = myChart2.addCategoryAxis("x", "ave_white_cat");
+          x.addOrderRule("x2");
+          x2.title = "Average white ball number";
+
+
+          var y_awb = myChart2.addMeasureAxis("y", "count");
+          y_awb.title = "Count";
+
+          var mySeries2 = myChart2.addSeries("white ball average", dimple.plot.bar, [x2, y_awb]);
+          myChart2.assignColor("white ball average", "blue", "blue", 0.7);
+          mySeries2.aggregate = dimple.aggregateMethod.count;
+
+          myChart2.draw();
+
+          //=================================================
+          // add a thrid svg to draw histogram of red ball numbers
+          var svg_3 = d3.select("body")
+              .append("svg")
+              .attr("width", width)
+              .attr("height", height)
+              .append('g')
+              .attr('class','chart');
+
+          var myChart3 = new dimple.chart(svg_3, data);
+          var x3 = myChart3.addCategoryAxis("x", "red");
+          x.addOrderRule("x3");
+          x3.title = "Red ball number";
+
+          var y_red = myChart3.addMeasureAxis("y", "count");
+          y_red.title = "Count";
+
+          var mySeries3 = myChart3.addSeries("red ball", dimple.plot.bar, [x3, y_red]);
+          myChart3.assignColor("red ball", "red", "red", 0.7);
+          mySeries3.aggregate = dimple.aggregateMethod.count;
+
+          myChart3.draw();
+
+
           // format the axes labels
           d3.selectAll(".dimple-title")
             .style("font-family", "arial")
@@ -102,14 +167,16 @@
             .style("font-family", "arial")
             .style("font-size", 12);
 
+
+          // summary of figures
           d3.select('body')
             .append('p')
-            .text("In summary, the red ball seems to have a random distribution between 1 and 26. \
-            It is hard to say there's any specific pattern in the distribution. \
-            The average number of white balls seems to have a random distribution between 15 and 57. \
-            The average number is around 35. These distributions are expected from random drawing on \
-            fair balls. However, in order to futher discover pattern behind this, if there is any, \
-            statistical machine learning methods should be employed. ")
+            .text("From the above fitures, we can summarize that the red ball seems to have a random distribution between 1 and 26, \
+            although some numbers (6, 10, 25) appeared more often than the other. \
+            The average number of white balls is distributed between 15 and 57. The center of distribution is around 36 -38. \
+            With more drawings in the future, the distribution pattern will be more clear and approach normal distribution. \
+            These distributions are expected from random drawing on fair balls.\
+            Therefore, my conclusion is that based on current data, the powerball game numbers are random distributed. ")
         };
       </script>
   </head>
