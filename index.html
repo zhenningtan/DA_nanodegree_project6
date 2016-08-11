@@ -125,6 +125,7 @@
 
           var y_awb = myChart2.addMeasureAxis("y", "count");
           y_awb.title = "Count";
+          y_awb.tickFormat = "d";
 
           var mySeries2 = myChart2.addSeries("white ball average", dimple.plot.bar, [x2, y_awb]);
           myChart2.assignColor("white ball average", "blue", "blue", 0.7);
@@ -148,6 +149,8 @@
 
           var y_red = myChart3.addMeasureAxis("y", "count");
           y_red.title = "Count";
+          y_red.tickFormat = "d";
+          y_red.ticks = 6;
 
           var mySeries3 = myChart3.addSeries("red ball", dimple.plot.bar, [x3, y_red]);
           myChart3.assignColor("red ball", "red", "red", 0.7);
