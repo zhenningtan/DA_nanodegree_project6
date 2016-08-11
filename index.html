@@ -29,29 +29,29 @@
 
   </style>
     <script type="text/javascript">
-      function draw(data) {
-        d3.select('body')
-          .append('h2')
-          .text("Powerball analysis");
+        function draw(data) {
+          d3.select('body')
+            .append('h2')
+            .text("Powerball analysis");
+  
+          d3.select('body')
+            .append('p')
+            .text("Powerball is a jackpot game with a long hisotry. Starting October 2015, the games changes to its new rule: \
+             Every Wednesday and Saturday, five white balls are drawn out of a drum with 69 balls \
+             and one red ball out of a drum with 26 red balls. ");
+  
+          d3.select('body')
+            .append('a')
+            .attr("href", "http://www.powerball.com/powerball/pb_howtoplay.asp")
+            .html("Click here to learn how to play Powerball game");
 
-        d3.select('body')
-          .append('p')
-          .text("Powerball is a jackpot game with a long hisotry. Starting October 2015, the games changes to its new rule: \
-           Every Wednesday and Saturday, five white balls are drawn out of a drum with 69 balls \
-           and one red ball out of a drum with 26 red balls. ");
-
-        d3.select('body')
-          .append('a')
-          .attr("href", "http://www.powerball.com/powerball/pb_howtoplay.asp")
-          .html("Click here to learn how to play Powerball game");
-
-        d3.select('body')
-          .append('p')
-          .text("Theoretically, the drawing procedure should not bias any specific number. However, it's curious to know \
-          the number distribution on every draw over a period of time. My goad is to visualize the number distribution \
-          of the jackpot number since the new rule. For the sake of simplicity and visualization, I only plot the distribution \
-          of the red ball number and the average number of five white balls in each draw. Since the five white balls are draw from \
-          69 balls, the expected average number of white balls should be 35. The red ball should evenly distributed between 1 and 26. ")
+          d3.select('body')
+            .append('p')
+            .text("Theoretically, the drawing procedure should not bias any specific number. However, it's curious to know \
+            the number distribution on every draw over a period of time. My goad is to visualize the number distribution \
+            of the jackpot number since the new rule. For the sake of simplicity and visualization, I only plot the distribution \
+            of the red ball number and the average number of five white balls in each draw. Since the five white balls are draw from \
+            69 balls, the expected average number of white balls should be 35. The red ball should evenly distributed between 1 and 26. ")
 
           "use strict";
           var margin = 50,
@@ -67,14 +67,13 @@
               .attr('class','chart');
 
 
-
+          // for each data point, convert the number to "integer" type. Create additional field for each row
           data.forEach(function(d) {
                               d['n1'] = +d['n1'];
                               d['n2'] = +d['n2'];
                               d['n3'] = +d['n3'];
                               d['n4'] = +d['n4'];
                               d['n5'] = +d['n5'];
-                              //d['date'] "%m/%d/%Y" no need to parse date. dimple addTimeAxis will change input to output format
                               d['red'] = +d['red'];
                               d["average_white_ball"] = (d['n1'] + d['n2'] + d['n3'] + d['n4'] + d['n5']) / 5;
                               d['count'] =1 ;
@@ -86,7 +85,7 @@
           var myChart = new dimple.chart(svg, data);
 
           // define x axis in time scale
-          var x = myChart.addTimeAxis("x", "date", "%m/%d/%Y", "%Y-%m")
+          var x = myChart.addTimeAxis("x", "date", "%m/%d/%Y", "%Y-%m");
           x.addOrderRule("Date");
           x.title = "Draw Date";
 
